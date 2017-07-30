@@ -1,0 +1,6 @@
+>>status                Checks whether someone is currently participating in the collab or the collab is currently open.
+>>pull                  Join the collab. The bot will provide the session file.
+>>push                  Submit your new collab session. Must be typed as a comment to a file upload.
+>>cancel                Cancel your collab participation.
+>>setocc [true/false]   Set the current occupied status of the collab. Setting to false will open the collab and vice versa. (Admin only)
+>>forcepush             Forcefully submit a collab session. Must be typed as a comment to a file upload. (Admin only)
