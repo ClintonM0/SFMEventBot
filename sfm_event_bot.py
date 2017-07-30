@@ -21,13 +21,16 @@ async def on_ready():
     server = client.get_server("225224650899193859");
     global currentUser;
     currentUser = server.get_member("181632171470094336");
-    await client.change_presence(game=discord.Game(name="Can't touch this"));
+    await client.change_presence(game=discord.Game(name="Type '>>status'"));
     
 @client.event
 async def on_message(message):
     global server;
     global occupied;
     global currentUser;
+
+    if message.channel != server.get_channel("340522118968115201"):
+        return;
     
     # >>status
     if message.content.lower().startswith(">>status"):
@@ -46,12 +49,11 @@ async def on_message(message):
             await client.send_message(message.channel, "Currently in use by " + currentUser.nick);
         else:
             print("The current collab user has been set to " + message.author.mention + ".");
+            occupied = True;
+            currentUser = message.author;
             await client.send_file(message.channel, "SFMEvent/collab.dmx", content="The current collab user has been set to " + message.author.mention + ". Here's the session file:");
             await client.send_message(message.channel, message.author.mention + " You have 4 hours to submit content to the collab. Attach your finished file with the comment '>>push' to submit the file.");
             await client.send_message(message.channel, "Type '>>cancel' if you wish to cancel your submission period so that others can participate.");
-            occupied = True;
-:
-                        currentUser = message.author;
             await asyncio.sleep(14400);
             if occupied and message.author == currentUser:
                 occupied = False;
