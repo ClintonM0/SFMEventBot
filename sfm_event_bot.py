@@ -29,7 +29,19 @@ async def on_message(message):
     global occupied;
     global currentUser;
 
-    if message.channel != server.get_channel("340522118968115201"):
+    if message.channel == server.get_channel("341033980176629760"):
+        if discord.utils.get(server.roles, name="Admins") in message.author.roles:
+            if message.content.lower().startswith(">>votesetup p2fq7m4lpvgfrdkse7ap"):
+                print("Vote setup command received");
+                await client.send_message(message.channel, "*Debug: Vote setup command received*");
+                #await client.purge_from(server.get_channel("329311176036974592"));
+                async for submission in client.logs_from(server.get_channel("322685481437495298"), limit=500):
+                    if len(submission.attachments) == 1:
+                        em = discord.Embed();
+                        em.set_image(url=submission.attachments[0].get("url"));
+                        m = await client.send_message(message.channel, content=submission.author.mention, embed=em);
+                        await client.add_reaction(m, "\U0001F44D");
+    elif message.channel != server.get_channel("340522118968115201"):
         return;
     
     # >>status
