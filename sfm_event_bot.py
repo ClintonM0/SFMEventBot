@@ -143,4 +143,4 @@ async def on_message(message):
                     shutil.copyfileobj(response, out_file);
                 await client.send_message(message.channel, message.author.mention + " File accepted. The collab status is now open. Type '>>pull' to join the collab.");
 
-client.run("MzQxMDMyOTA3OTQ0NDkzMDY2.DGMcjQ.37zbojh9rMB1pmtKScBkYyAanAs");
+client.run("snip");
