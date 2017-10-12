@@ -13,6 +13,7 @@ server = "";
 
 occupied = False;
 currentUser = "";
+currentID = 0;
 
 @client.event
 async def on_ready():
@@ -28,18 +29,19 @@ async def on_message(message):
     global server;
     global occupied;
     global currentUser;
+    global currentID;
 
-    if message.channel == server.get_channel("341033980176629760"):
+    # >>votesetup
+    if message.channel == server.get_channel("242720891782430730"):
         if discord.utils.get(server.roles, name="Admins") in message.author.roles:
-            if message.content.lower().startswith(">>votesetup p2fq7m4lpvgfrdkse7ap"):
+            if message.content.lower().startswith(">>votesetup sp00kfest"):
                 print("Vote setup command received");
                 await client.send_message(message.channel, "*Debug: Vote setup command received*");
-                #await client.purge_from(server.get_channel("329311176036974592"));
                 async for submission in client.logs_from(server.get_channel("322685481437495298"), limit=500):
                     if len(submission.attachments) == 1:
                         em = discord.Embed();
                         em.set_image(url=submission.attachments[0].get("url"));
-                        m = await client.send_message(message.channel, content=submission.author.mention, embed=em);
+                        m = await client.send_message(server.get_channel("329311176036974592"), content=submission.author.mention, embed=em);
                         await client.add_reaction(m, "\U0001F44D");
     elif message.channel != server.get_channel("340522118968115201"):
         return;
@@ -55,6 +57,7 @@ async def on_message(message):
     # >>pull
     elif message.content.lower().startswith(">>pull"):
         print("Pull command received");
+        ID = 0;
         await client.send_message(message.channel, "*Debug: Pull command received*");
         if occupied:
             print("Currently in use by " + currentUser.nick);
@@ -63,11 +66,13 @@ async def on_message(message):
             print("The current collab user has been set to " + message.author.mention + ".");
             occupied = True;
             currentUser = message.author;
+            currentID += 1;
+            ID = currentID;
             await client.send_file(message.channel, "SFMEvent/collab.dmx", content="The current collab user has been set to " + message.author.mention + ". Here's the session file:");
             await client.send_message(message.channel, message.author.mention + " You have 4 hours to submit content to the collab. Attach your finished file with the comment '>>push' to submit the file.");
             await client.send_message(message.channel, "Type '>>cancel' if you wish to cancel your submission period so that others can participate.");
             await asyncio.sleep(14400);
-            if occupied and message.author == currentUser:
+            if (occupied and message.author == currentUser) and ID == currentID:
                 occupied = False;
                 await client.send_message(server.get_channel("341033980176629760"), "The collab is now open. Submission time has expired for " + currentUser.mention + ".");
             
@@ -88,6 +93,7 @@ async def on_message(message):
                     # Download submitted file
                     with urllib.request.urlopen(Request(message.attachments[0].get("url"), headers={'User-Agent': 'Mozilla/5.0'})) as response, open("SFMEvent/collab.dmx", 'wb') as out_file:
                         shutil.copyfileobj(response, out_file);
+                    occupied = False;
                     await client.send_message(message.channel, message.author.mention + " File accepted. The collab status is now open. Type '>>pull' to join the collab.");
                 else:
                     await client.send_message(message.channel, message.author.mention + " File has been caught in the bot's filter and has not been accepted. Message the admins if you believe this is a mistake.");
@@ -137,4 +143,4 @@ async def on_message(message):
                     shutil.copyfileobj(response, out_file);
                 await client.send_message(message.channel, message.author.mention + " File accepted. The collab status is now open. Type '>>pull' to join the collab.");
 
-client.run("--snip--");
+client.run("MzQxMDMyOTA3OTQ0NDkzMDY2.DGMcjQ.37zbojh9rMB1pmtKScBkYyAanAs");
